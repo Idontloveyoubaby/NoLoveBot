@@ -57,8 +57,7 @@ class Admin(commands.Cog):
     @app_commands.command(name="lock_or_unlock", description="Locks or unlocks a channel")
     @discord.app_commands.describe(channel="The channel you want to lock or unlock")
     @discord.app_commands.describe(action="'lock' or 'unlock'")
-    @discord.app_commands.describe(visibility="Should the channel be visible or invisible?")
-    async def lock_or_unlock(self, interaction: discord.Interaction, channel: discord.TextChannel = None, action: Literal["lock", "unlock"] = "lock", visibility: Literal["visible", "invisible"] = "visible"):
+    async def lock_or_unlock(self, interaction: discord.Interaction, channel: discord.TextChannel = None, action: Literal["lock", "unlock"] = "lock",):
         if not interaction.user.guild_permissions.manage_channels:
             await interaction.response.send_message("You do not have the permission to lock or unlock channels.", ephemeral=True)
             return
@@ -75,19 +74,10 @@ class Admin(commands.Cog):
             await interaction.response.send_message(f"The channel is already {'locked' if action=='lock' else 'unlocked'}.", ephemeral=True)
             return
 
-        if visibility == "invisible":
-            await channel.edit(sync_permissions=False)
-
         await channel.set_permissions(default_role, overwrite=overwrite)
-
-        if visibility == "invisible":
-            await channel.edit(sync_permissions=True)
-
         lockembed = discord.Embed(title=f"{action} channel", color=discord.Color.green(), timestamp=datetime.now())
         lockembed.add_field(name=f"The following channel has been {action}:", value=f"<#{channel.id}>")
         await interaction.response.send_message(embed=lockembed)
-
-
 
     @app_commands.command(name="nuke", description="Clears a whole channel")
     @discord.app_commands.describe(channel="The channel you want to nuke")
@@ -126,6 +116,14 @@ class Admin(commands.Cog):
                 await webhook.delete()
         else:
             await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
+
+    @app_commands.command(name="Timeout", description="Timeout a Member.")
+    @discord.app_commands.describe(member="The member you want to Timeout.")
+    async def Timeout(ctx: commands.Context, member: discord.Member, until: int):
+        handshake = await member.timeout(userid=member.id, guild_id=ctx.guild.id, until=until)
+        if handshake:
+            return await ctx.send(f"Successfully Timed out user for {until} minutes.")
+        await ctx.send("Something went wrong")
 
 
 
