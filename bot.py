@@ -95,16 +95,6 @@ async def bg_task():
             await asyncio.sleep(5)
     except Exception as e:
         print(e)
-
-
-@bot.event()
-async def on_ready():
-    status_task.start()
-
-@tasks.loop
-async def status_task() -> None:
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game("Xnxx.com Porn Game"))
-
 """
 @bot.event
 async def on_message(message):
