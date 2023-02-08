@@ -5,9 +5,12 @@ import platform
 from datetime import datetime
 
 import discord
+from psutil import STATUS_DISK_SLEEP
 import requests
 from colorama import Fore
 from discord.ext import commands, tasks
+from discord.ext.commands import Bot
+from discord.ext.commands import Context
 
 with open("config.json", "r", encoding="UTF-8") as configfile:
     config = json.load(configfile)
@@ -68,7 +71,7 @@ async def on_ready():
     time = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
     print(f'[{time}] [{Fore.LIGHTCYAN_EX}BOT{Fore.RESET}] Loaded [{loaded}/{allcogs}] cogs')
     
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(type=discord.ActivityType.watching, name="anditv.it"),)
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(type=discord.ActivityType.watching, name="xnxx.com"),)
     print(f'\n[{time}] [{Fore.LIGHTCYAN_EX}BOT{Fore.RESET}] has connected as {bot.user} with the api version {discord.__version__}')
 
     bg_task.start()
@@ -85,13 +88,22 @@ async def on_member_join(member):
 async def bg_task():
     try:
         await bot.wait_until_ready()
-        status_list = [(discord.Status.dnd, discord.Activity(type=discord.ActivityType.watching, name="github.com/anditv21")),
-                       (discord.Status.dnd, discord.Activity(type=discord.ActivityType.watching, name="anditv.it"))]
+        status_list = [(discord.Status.dnd, discord.Activity(type=discord.ActivityType.watching, name="xnxx.com")),
+                       (discord.Status.dnd, discord.Activity(type=discord.ActivityType.watching, name="xnxx.com"))]
         for status, activity in status_list:
             await bot.change_presence(status=status, activity=activity)
             await asyncio.sleep(5)
     except Exception as e:
         print(e)
+
+
+@bot.event()
+async def on_ready():
+    status_task.start()
+
+@tasks.loop
+async def status_task() -> None:
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game("Xnxx.com Porn Game"))
 
 """
 @bot.event
