@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import Literal, Union
-
+from typing import Literal, Self, Union
+import json
 import discord
-from discord import app_commands
+from discord import Webhook, WebhookMessage, app_commands
 from discord.ext import commands
 
 
@@ -117,15 +117,14 @@ class Admin(commands.Cog):
         else:
             await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
 
-    @app_commands.command(name="Timeout", description="Timeout a Member.")
-    @discord.app_commands.describe(member="The member you want to Timeout.")
-    async def Timeout(ctx: commands.Context, member: discord.Member, until: int):
-        handshake = await member.timeout(userid=member.id, guild_id=ctx.guild.id, until=until)
+  
+    @app_commands.command(name="timeout", description="timeout a member.")
+    @discord.app_commands.describe(member="the member you want to timeout.")
+    async def timeout(self, interaction: discord.Interaction, member: discord.Member, until: int):
+        handshake = await member.timeout(userid=member.id, guild_id=self.guild.id, until=until)
         if handshake:
-            return await ctx.send(f"Successfully Timed out user for {until} minutes.")
-        await ctx.send("Something went wrong")
-
-
-
+            return await self.send(f"Successfully Timed out user for {until} minutes.")
+        await self.send("Something went wrong")
+  
 async def setup(bot):
     await bot.add_cog(Admin(bot))
