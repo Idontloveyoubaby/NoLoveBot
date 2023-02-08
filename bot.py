@@ -88,8 +88,8 @@ async def on_member_join(member):
 async def bg_task():
     try:
         await bot.wait_until_ready()
-        status_list = [(discord.Status.dnd, discord.Activity(type=discord.ActivityType.watching, name="xnxx.com")),
-                       (discord.Status.dnd, discord.Activity(type=discord.ActivityType.watching, name="xnxx.com"))]
+        status_list = [(discord.Status.idle, discord.Activity(type=discord.ActivityType.watching, name="xnxx.com")),
+                       (discord.Status.idle, discord.Activity(type=discord.ActivityType.watching, name="xnxx.com"))]
         for status, activity in status_list:
             await bot.change_presence(status=status, activity=activity)
             await asyncio.sleep(5)
